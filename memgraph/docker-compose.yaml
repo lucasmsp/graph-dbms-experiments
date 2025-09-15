@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  memgraph:
+    image: memgraph/memgraph-mage:latest
+    container_name: memgraph-mage
+    ports:
+      - "7687:7687"  # Bolt protocol
+      - "7444:7444"  # HTTP logs
+    volumes:
+      - mg_lib:/var/lib/memgraph    # Data persistence
+      - mg_log:/var/log/memgraph    # Logs
+      - mg_etc:/etc/memgraph        # Config
+    command: ["--log-level=TRACE", "--memory-limit=1024"]
+    restart: unless-stopped
+
+  memgraph-lab:
+    image: memgraph/lab:latest
+    container_name: memgraph-lab
+    ports:
+      - "3000:3000"
+    depends_on:
+      - memgraph
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
+    restart: unless-stopped
+
+volumes:
+  mg_lib:
+  mg_log:
+  mg_etc:

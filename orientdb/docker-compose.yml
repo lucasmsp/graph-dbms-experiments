@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  orientdb:
+    image: orientdb:latest
+    container_name: orientdb
+    ports:
+      - "2424:2424"  # Binary protocol
+      - "2480:2480"  # HTTP/Studio
+    environment:
+      - ORIENTDB_ROOT_PASSWORD=123456
+    volumes:
+      - orientdb_data:/orientdb/databases
+      - orientdb_backup:/orientdb/backup
+      - orientdb_config:/orientdb/config
+    restart: unless-stopped
+
+volumes:
+  orientdb_data:
+  orientdb_backup:
+  orientdb_config:
+

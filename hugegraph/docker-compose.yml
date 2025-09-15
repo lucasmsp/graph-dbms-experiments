@@ -1,0 +1,34 @@
+# docker-compose.yml
+version: '3'
+services:
+  hugegraph:
+    image: hugegraph/hugegraph:1.5.0
+    container_name: hugegraph-server
+    ports:
+      - "8081:8080"
+    environment:
+      - PRELOAD=true
+      # - PASSWORD=123456  # Opcional: habilitar autenticação
+    volumes:
+      - hugegraph-data:/hugegraph/data
+    networks:
+      - hugegraph-net
+
+  hugegraph-hubble:
+    image: hugegraph/hubble:1.5.0
+    container_name: hugegraph-hubble
+    ports:
+      - "8089:8088"
+    depends_on:
+      - hugegraph
+    networks:
+      - hugegraph-net
+
+
+networks:
+  hugegraph-net:
+    driver: bridge
+
+volumes:
+  hugegraph-data:
+
